@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #F7F5F0;
+  --bg-surface: #FFFFFF;
+  --bg-secondary: #F1EEE7;
+  --gold-primary: #B89555;
+  --gold-dark: #8F713D;
+  --text-primary: #171717;
+  --text-secondary: #66635D;
+  --text-muted: #96928A;
+  --border-neutral: rgba(40, 35, 25, 0.12);
+  --border-gold: #B89555;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.01em;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Light luxury custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F5F0;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(184, 149, 85, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(184, 149, 85, 0.6);
+}
+
+/* Clean luxury card */
+.light-luxury-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(40, 35, 25, 0.12);
+  box-shadow: 0 4px 20px -2px rgba(40, 35, 25, 0.05);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.light-luxury-card:hover {
+  border-color: rgba(184, 149, 85, 0.5);
+  box-shadow: 0 8px 30px -4px rgba(40, 35, 25, 0.08);
+}
+
+/* Subtle fade in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease-out forwards;
+}
