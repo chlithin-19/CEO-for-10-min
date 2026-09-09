@@ -39,6 +39,7 @@ export const DOMAINS: Domain[] = [
         wheelLabel: 'PRICE WAR',
         title: 'Price War',
         situation: 'Your biggest competitor has reduced prices by 30%, and your sales have started declining. Matching their prices would protect market share but could make several of your products unprofitable.',
+        constraint: 'Matching competitor prices would protect market share but makes core product lines unprofitable.',
         ceoChallenge: 'How will you defend market share without destroying your margins?',
         stakes: 'Margin & Positioning'
       },
@@ -48,6 +49,7 @@ export const DOMAINS: Domain[] = [
         wheelLabel: 'CUSTOMER RETENTION',
         title: 'Customer Retention Crisis',
         situation: 'Your customer retention has fallen by 25% in three months, while customer acquisition costs have increased significantly.',
+        constraint: 'Customer acquisition costs have escalated sharply while 90-day retention has dropped by 25%.',
         ceoChallenge: 'Will you focus resources on winning new customers or retaining existing ones—and what specific changes will you make?',
         stakes: 'Customer Churn & Unit Economics'
       },
@@ -57,6 +59,7 @@ export const DOMAINS: Domain[] = [
         wheelLabel: 'INVENTORY TRAP',
         title: 'Inventory Trap',
         situation: 'You have ₹2 crore worth of unsold seasonal inventory, and its market value is falling rapidly.',
+        constraint: 'Unsold seasonal inventory is depreciating rapidly; clearance fire-sales threaten brand equity and future pricing power.',
         ceoChallenge: 'How will you convert the inventory into cash without heavily damaging your brand, pricing, or future sales?',
         stakes: 'Capital Allocation & Inventory Risk'
       },
@@ -107,6 +110,7 @@ export const DOMAINS: Domain[] = [
         wheelLabel: 'RISING COSTS',
         title: 'Rising Costs',
         situation: 'Food and operating costs have increased by 25%, but a significant price increase could drive customers toward competitors.',
+        constraint: 'Input costs rose 25%; direct price increases risk alienating your existing customer base.',
         ceoChallenge: 'How will you protect profitability without losing your customer base?',
         stakes: 'Margin & Positioning'
       },
@@ -126,6 +130,7 @@ export const DOMAINS: Domain[] = [
         wheelLabel: 'CUSTOMER DECLINE',
         title: 'Customer Decline',
         situation: 'Monthly customers have fallen by 30%, even though your product quality and customer ratings remain relatively strong.',
+        constraint: 'Footfall has contracted 30% despite stable ratings; the underlying churn driver is still unidentified.',
         ceoChallenge: 'What do you believe is the root problem, and where will you invest first to recover demand?',
         stakes: 'Capital Allocation & Inventory Risk'
       },

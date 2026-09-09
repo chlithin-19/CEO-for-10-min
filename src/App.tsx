@@ -238,10 +238,12 @@ export const App: React.FC = () => {
         {/* ========================================================================= */}
         {/* STAGE 5: STEP 02 - BUDGET REVEALED                                        */}
         {/* ========================================================================= */}
-        {selectedBudget && stage === 'BUDGET_REVEALED' && (
+        {selectedBudget && selectedProblem && selectedDomain && stage === 'BUDGET_REVEALED' && (
           <div className="w-full flex flex-col items-center transition-all animate-fadeIn">
             <BudgetResultCard
               budget={selectedBudget}
+              problem={selectedProblem}
+              domain={selectedDomain}
               onProceedToFinal={handleProceedToFinal}
               isFinalUnlocked={false}
             />

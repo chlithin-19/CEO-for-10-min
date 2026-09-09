@@ -106,12 +106,41 @@ export const FinalChallengeCard: React.FC<FinalChallengeCardProps> = ({
             {problem.situation}
           </p>
 
-          {problem.constraint && (
-            <div className="p-4 rounded bg-[#FBF9F5] border border-[#B58A45]/30 text-sm sm:text-base text-[#4A4843]">
-              <strong className="text-[#111111] font-semibold">Constraint: </strong>
-              {problem.constraint}
+          {/* Dedicated Operational Constraints Section */}
+          <div className="p-6 rounded-lg bg-[#FAF8F4] border-2 border-[#B58A45]/40 shadow-sm">
+            <h4 className="font-cinzel text-xs sm:text-sm font-bold tracking-[0.2em] text-[#8F6B32] uppercase mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#B58A45]"></span>
+              OPERATIONAL CONSTRAINTS & RESOURCE LIMITS
+            </h4>
+
+            <div className="space-y-2.5 text-sm sm:text-base text-[#111111]">
+              <div className="flex items-start space-x-2">
+                <span className="font-bold text-[#8F6B32] shrink-0">•</span>
+                <p>
+                  <strong className="font-bold text-[#111111]">Capital Limit: </strong>
+                  Budget is capped strictly at <span className="font-bold text-[#8F6B32]">{budget.display}</span>. The turnaround must be achieved within this capital allocation.
+                </p>
+              </div>
+
+              {problem.constraint && (
+                <div className="flex items-start space-x-2">
+                  <span className="font-bold text-[#8F6B32] shrink-0">•</span>
+                  <p>
+                    <strong className="font-bold text-[#111111]">Operating Reality: </strong>
+                    {problem.constraint}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-start space-x-2">
+                <span className="font-bold text-[#8F6B32] shrink-0">•</span>
+                <p>
+                  <strong className="font-bold text-[#111111]">Execution Window: </strong>
+                  Candidates have a 10-minute executive deliberation window to present their turnaround strategy.
+                </p>
+              </div>
             </div>
-          )}
+          </div>
 
           <div className="p-5 sm:p-6 rounded bg-[#F5F1E8] border border-[#B58A45]/40 mt-4">
             <span className="font-cinzel text-xs font-bold tracking-[0.2em] text-[#8F6B32] uppercase block mb-2">
