@@ -8,22 +8,22 @@ export default {
     extend: {
       colors: {
         bg: {
-          primary: '#F7F5F0',
+          primary: '#F5F3EE',
           surface: '#FFFFFF',
-          secondary: '#F1EEE7',
+          secondary: '#EDEAE2',
         },
         gold: {
-          primary: '#B89555',
-          dark: '#8F713D',
-          subtle: 'rgba(184, 149, 85, 0.08)',
-          border: 'rgba(184, 149, 85, 0.35)',
-          hover: '#B89555',
+          primary: '#B58A45',
+          dark: '#8F6B32',
+          subtle: 'rgba(181, 138, 69, 0.1)',
+          border: 'rgba(181, 138, 69, 0.35)',
+          hover: '#B58A45',
         },
         luxury: {
-          text: '#171717',
-          secondary: '#66635D',
-          muted: '#96928A',
-          border: 'rgba(40, 35, 25, 0.12)',
+          text: '#111111',
+          secondary: '#4A4843',
+          muted: '#7A766F',
+          border: 'rgba(17, 17, 17, 0.12)',
         }
       },
       fontFamily: {
@@ -32,10 +32,10 @@ export default {
         sans: ['"Inter"', '"Manrope"', 'sans-serif'],
       },
       boxShadow: {
-        'card': '0 4px 20px -2px rgba(40, 35, 25, 0.05), 0 2px 6px -1px rgba(40, 35, 25, 0.02)',
-        'card-hover': '0 10px 30px -4px rgba(40, 35, 25, 0.08), 0 4px 12px -2px rgba(40, 35, 25, 0.03)',
-        'wheel': '0 20px 50px -10px rgba(40, 35, 25, 0.1), 0 8px 20px -5px rgba(40, 35, 25, 0.05)',
-        'button-hover': '0 6px 20px -2px rgba(184, 149, 85, 0.25)',
+        'executive-card': '0 8px 30px rgba(17, 17, 17, 0.07), 0 2px 8px rgba(181, 138, 69, 0.04)',
+        'executive-hover': '0 16px 40px rgba(17, 17, 17, 0.12), 0 4px 12px rgba(181, 138, 69, 0.08)',
+        'wheel-bold': '0 25px 60px -12px rgba(17, 17, 17, 0.18), 0 10px 24px -6px rgba(181, 138, 69, 0.12)',
+        'button-command': '0 6px 20px rgba(17, 17, 17, 0.25)',
       },
     },
   },

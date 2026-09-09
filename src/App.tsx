@@ -1,65 +1,114 @@
 import React, { useState } from 'react';
 import { DOMAINS, Domain, ProblemStatement } from './data/domains';
+import { BudgetItem } from './data/budgets';
 import { EventHeader } from './components/EventHeader';
+import { ProgressIndicator, StageStep } from './components/ProgressIndicator';
 import { DomainSelector } from './components/DomainSelector';
 import { ProblemWheel } from './components/ProblemWheel';
+import { BudgetWheel } from './components/BudgetWheel';
 import { SpinButton } from './components/SpinButton';
-import { ResultReveal } from './components/ResultReveal';
+import { ProblemCard } from './components/ProblemCard';
+import { BudgetResultCard } from './components/BudgetResultCard';
+import { FinalChallengeCard } from './components/FinalChallengeCard';
 import { ResetControls } from './components/ResetControls';
 
-type ExperienceStage = 'SELECT_DOMAIN' | 'READY_TO_SPIN' | 'SPINNING' | 'DECISION_REVEALED';
+type Stage = 
+  | 'SELECT_DOMAIN'
+  | 'READY_TO_SPIN_PROBLEM'
+  | 'SPINNING_PROBLEM'
+  | 'PROBLEM_REVEALED'
+  | 'READY_TO_SPIN_BUDGET'
+  | 'SPINNING_BUDGET'
+  | 'BUDGET_REVEALED'
+  | 'FINAL_CHALLENGE';
 
 export const App: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
-  const [stage, setStage] = useState<ExperienceStage>('SELECT_DOMAIN');
   const [selectedProblem, setSelectedProblem] = useState<ProblemStatement | null>(null);
+  const [selectedBudget, setSelectedBudget] = useState<BudgetItem | null>(null);
+  const [stage, setStage] = useState<Stage>('SELECT_DOMAIN');
 
-  // When candidate selects a domain
+  // Compute current progress step
+  const getProgressStep = (): StageStep => {
+    if (stage === 'SELECT_DOMAIN' || stage === 'READY_TO_SPIN_PROBLEM' || stage === 'SPINNING_PROBLEM') {
+      return 1;
+    }
+    if (stage === 'PROBLEM_REVEALED' || stage === 'READY_TO_SPIN_BUDGET' || stage === 'SPINNING_BUDGET') {
+      return 2;
+    }
+    return 3;
+  };
+
+  // 1. Domain Selection
   const handleDomainSelect = (domain: Domain) => {
     setSelectedDomain(domain);
     setSelectedProblem(null);
-    setStage('READY_TO_SPIN');
+    setSelectedBudget(null);
+    setStage('READY_TO_SPIN_PROBLEM');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // When candidate triggers spin
-  const handleStartSpin = () => {
-    if (stage === 'SPINNING') return;
-    setStage('SPINNING');
-    setSelectedProblem(null);
+  // 2. Problem Wheel Spin
+  const handleStartSpinProblem = () => {
+    if (stage === 'SPINNING_PROBLEM') return;
+    setStage('SPINNING_PROBLEM');
   };
 
-  // When wheel finishes mechanical deceleration
-  const handleSpinComplete = (resultProblem: ProblemStatement) => {
-    setSelectedProblem(resultProblem);
-    setStage('DECISION_REVEALED');
+  const handleSpinProblemComplete = (problem: ProblemStatement) => {
+    setSelectedProblem(problem);
+    setStage('PROBLEM_REVEALED');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Candidate chooses to re-spin
-  const handleSpinAgain = () => {
-    setSelectedProblem(null);
-    setStage('READY_TO_SPIN');
+  // 3. Transition to Budget Wheel
+  const handleProceedToBudget = () => {
+    setStage('READY_TO_SPIN_BUDGET');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Candidate chooses to change domain
-  const handleChangeDomain = () => {
-    setSelectedProblem(null);
+  // 4. Budget Wheel Spin
+  const handleStartSpinBudget = () => {
+    if (stage === 'SPINNING_BUDGET') return;
+    setStage('SPINNING_BUDGET');
+  };
+
+  const handleSpinBudgetComplete = (budget: BudgetItem) => {
+    setSelectedBudget(budget);
+    setStage('BUDGET_REVEALED');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 5. Transition to Final Summary
+  const handleProceedToFinal = () => {
+    setStage('FINAL_CHALLENGE');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 6. Reset / Start Over
+  const handleReset = () => {
     setSelectedDomain(null);
+    setSelectedProblem(null);
+    setSelectedBudget(null);
     setStage('SELECT_DOMAIN');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] text-[#171717] flex flex-col relative selection:bg-[#B89555]/20 selection:text-[#171717]">
-      {/* Persistent Minimal Event Header */}
-      <EventHeader roundTitle="ROUND 1 • EXECUTIVE SIMULATION" />
+    <div className="min-h-screen bg-[#F5F3EE] text-[#111111] flex flex-col relative selection:bg-[#B58A45]/25 selection:text-[#111111]">
+      {/* Header */}
+      <EventHeader roundTitle="ROUND 1" />
 
-      {/* Main Interactive Stage with Generous Spacing */}
-      <main className="flex-1 flex flex-col justify-center items-center relative z-10 px-4 py-8 sm:py-12 md:py-16 max-w-7xl mx-auto w-full">
+      {/* Progress Indicator */}
+      <div className="pt-4 sm:pt-6">
+        <ProgressIndicator currentStep={getProgressStep()} />
+      </div>
+
+      {/* Main Interactive Stage */}
+      <main className="flex-1 flex flex-col justify-center items-center relative z-10 px-4 py-4 sm:py-8 md:py-10 max-w-7xl mx-auto w-full">
         
-        {/* STAGE 1: DOMAIN SELECTION */}
+        {/* ========================================================================= */}
+        {/* STAGE 1: DOMAIN SELECTION                                                 */}
+        {/* ========================================================================= */}
         {stage === 'SELECT_DOMAIN' && (
           <div className="w-full animate-fadeIn transition-all">
             <DomainSelector
@@ -70,84 +119,158 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        {/* STAGES 2, 3: WHEEL ARENA (READY TO SPIN & SPINNING) */}
-        {selectedDomain && (stage === 'READY_TO_SPIN' || stage === 'SPINNING') && (
+        {/* ========================================================================= */}
+        {/* STAGE 2: STEP 01 - PROBLEM WHEEL (READY TO SPIN & SPINNING)               */}
+        {/* ========================================================================= */}
+        {selectedDomain && (stage === 'READY_TO_SPIN_PROBLEM' || stage === 'SPINNING_PROBLEM') && (
           <div className="w-full flex flex-col items-center max-w-4xl mx-auto transition-all duration-300 animate-fadeIn">
             
-            {/* Prominent Hero Heading: 32-42px Desktop */}
+            {/* Bold Step & Heading */}
             <div className="text-center mb-6 sm:mb-8">
-              <h1 className="font-cinzel text-3xl sm:text-4xl md:text-[40px] font-semibold tracking-[0.18em] text-[#171717] uppercase leading-tight">
-                YOUR CHALLENGE AWAITS
+              <div className="inline-block px-3.5 py-1 mb-3 rounded bg-[#111111] text-[#B58A45] font-cinzel text-xs font-bold tracking-[0.25em] uppercase">
+                STEP 01 • THE BUSINESS PROBLEM
+              </div>
+              <h1 className="font-cinzel text-3xl sm:text-4xl md:text-[44px] font-black tracking-[0.15em] text-[#111111] uppercase leading-tight">
+                SPIN FOR YOUR CHALLENGE
               </h1>
-              <p className="text-xs sm:text-sm tracking-[0.2em] text-[#66635D] mt-2.5 font-normal uppercase">
-                Spin the wheel. Accept the decision.
+              <p className="text-sm sm:text-base tracking-[0.1em] text-[#4A4843] mt-2.5 font-medium max-w-lg mx-auto">
+                The problem is decided by the wheel. Your strategy is yours to decide.
               </p>
-              <div className="w-16 h-[1.5px] bg-[#B89555] mx-auto mt-4" />
+              <div className="w-20 h-[2.5px] bg-[#B58A45] mx-auto mt-4" />
             </div>
 
-            {/* Large Executive Wheel: 500-560px on Desktop */}
-            <div className="my-4 sm:my-6 transition-all duration-500">
+            {/* Problem Wheel (560-650px) */}
+            <div className="my-3 sm:my-5 transition-all duration-500">
               <ProblemWheel
                 domain={selectedDomain}
-                isSpinning={stage === 'SPINNING'}
-                onSpinStart={handleStartSpin}
-                onSpinComplete={handleSpinComplete}
+                isSpinning={stage === 'SPINNING_PROBLEM'}
+                onSpinStart={handleStartSpinProblem}
+                onSpinComplete={handleSpinProblemComplete}
                 selectedProblem={selectedProblem}
                 compact={false}
               />
             </div>
 
-            {/* Prominent Spin Button: 56-64px height, 18-20px text */}
+            {/* Prominent Spin Button */}
             <div className="flex flex-col items-center space-y-6 mt-6 sm:mt-8 w-full">
               <SpinButton
-                isSpinning={stage === 'SPINNING'}
-                onClick={handleStartSpin}
-                disabled={stage === 'SPINNING'}
+                isSpinning={stage === 'SPINNING_PROBLEM'}
+                onClick={handleStartSpinProblem}
+                disabled={stage === 'SPINNING_PROBLEM'}
+                label="SPIN THE WHEEL"
+                spinningLabel="SPINNING..."
               />
 
               <ResetControls
                 domain={selectedDomain}
-                onChangeDomain={handleChangeDomain}
-                disabled={stage === 'SPINNING'}
+                onChangeDomain={handleReset}
+                disabled={stage === 'SPINNING_PROBLEM'}
               />
             </div>
+
           </div>
         )}
 
-        {/* STAGE 4: RESULT REVEAL - CONFIDENTIAL EXECUTIVE BRIEFING */}
-        {selectedDomain && stage === 'DECISION_REVEALED' && selectedProblem && (
-          <div className="w-full max-w-5xl mx-auto flex flex-col items-center gap-8 transition-all duration-500 animate-fadeIn">
+        {/* ========================================================================= */}
+        {/* STAGE 3: STEP 01 - PROBLEM REVEALED                                       */}
+        {/* ========================================================================= */}
+        {selectedDomain && selectedProblem && stage === 'PROBLEM_REVEALED' && (
+          <div className="w-full flex flex-col items-center transition-all animate-fadeIn">
+            <ProblemCard
+              problem={selectedProblem}
+              domain={selectedDomain}
+              onProceedToBudget={handleProceedToBudget}
+              isBudgetUnlocked={false}
+            />
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* STAGE 4: STEP 02 - BUDGET WHEEL (READY TO SPIN & SPINNING)                */}
+        {/* ========================================================================= */}
+        {selectedDomain && selectedProblem && (stage === 'READY_TO_SPIN_BUDGET' || stage === 'SPINNING_BUDGET') && (
+          <div className="w-full flex flex-col items-center max-w-4xl mx-auto transition-all duration-300 animate-fadeIn">
             
-            {/* Minimized Landed Wheel Indicator above the result */}
-            <div className="flex items-center space-x-4 px-4 py-2 rounded-full border border-[rgba(40,35,25,0.1)] bg-[#FFFFFF] shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#B89555]"></span>
-              <span className="text-xs tracking-[0.2em] text-[#66635D] uppercase font-medium">
-                Arena: <strong className="text-[#171717] font-semibold">{selectedDomain.fullName}</strong>
-              </span>
-              <span className="text-[#96928A]">•</span>
-              <span className="text-xs tracking-[0.18em] text-[#8F713D] uppercase font-semibold">
-                Decision Locked
-              </span>
+            {/* Step 02 Heading */}
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="inline-block px-3.5 py-1 mb-3 rounded bg-[#111111] text-[#B58A45] font-cinzel text-xs font-bold tracking-[0.25em] uppercase">
+                STEP 02 • YOUR AVAILABLE CAPITAL
+              </div>
+              <h1 className="font-cinzel text-3xl sm:text-4xl md:text-[44px] font-black tracking-[0.15em] text-[#111111] uppercase leading-tight">
+                NOW, WHAT'S YOUR BUDGET?
+              </h1>
+              <p className="text-sm sm:text-base tracking-[0.1em] text-[#4A4843] mt-2.5 font-medium max-w-xl mx-auto">
+                Every CEO has limited resources. Build your strategy within the capital you are given.
+              </p>
+              <div className="w-20 h-[2.5px] bg-[#B58A45] mx-auto mt-4" />
             </div>
 
-            {/* Confidential Executive Briefing Card */}
-            <div className="w-full">
-              <ResultReveal
-                problem={selectedProblem}
-                domain={selectedDomain}
-                onSpinAgain={handleSpinAgain}
-                onChangeDomain={handleChangeDomain}
+            {/* Active Problem Summary Pill */}
+            <div className="mb-6 px-5 py-2.5 rounded-md bg-[#FFFFFF] border border-[#B58A45]/40 flex items-center space-x-3 shadow-sm text-xs">
+              <span className="font-bold text-[#8F6B32] uppercase tracking-wider">LOCKED PROBLEM:</span>
+              <span className="font-semibold text-[#111111]">{selectedProblem.title}</span>
+            </div>
+
+            {/* Budget Wheel (500-600px) */}
+            <div className="my-3 sm:my-5 transition-all duration-500">
+              <BudgetWheel
+                isSpinning={stage === 'SPINNING_BUDGET'}
+                onSpinStart={handleStartSpinBudget}
+                onSpinComplete={handleSpinBudgetComplete}
+                selectedBudget={selectedBudget}
               />
             </div>
 
+            {/* Spin Budget Button */}
+            <div className="flex flex-col items-center space-y-6 mt-6 sm:mt-8 w-full">
+              <SpinButton
+                isSpinning={stage === 'SPINNING_BUDGET'}
+                onClick={handleStartSpinBudget}
+                disabled={stage === 'SPINNING_BUDGET'}
+                label="SPIN BUDGET"
+                spinningLabel="ALLOCATING..."
+              />
+            </div>
+
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* STAGE 5: STEP 02 - BUDGET REVEALED                                        */}
+        {/* ========================================================================= */}
+        {selectedBudget && stage === 'BUDGET_REVEALED' && (
+          <div className="w-full flex flex-col items-center transition-all animate-fadeIn">
+            <BudgetResultCard
+              budget={selectedBudget}
+              onProceedToFinal={handleProceedToFinal}
+              isFinalUnlocked={false}
+            />
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* STAGE 6: STEP 03 - FINAL CEO CHALLENGE CARD                               */}
+        {/* ========================================================================= */}
+        {selectedDomain && selectedProblem && selectedBudget && stage === 'FINAL_CHALLENGE' && (
+          <div className="w-full flex flex-col items-center transition-all animate-fadeIn">
+            <FinalChallengeCard
+              domain={selectedDomain}
+              problem={selectedProblem}
+              budget={selectedBudget}
+              onReset={handleReset}
+            />
           </div>
         )}
 
       </main>
 
-      {/* Minimal Bottom Identity */}
-      <footer className="w-full border-t border-[rgba(40,35,25,0.06)] py-4 text-center text-[11px] tracking-[0.22em] text-[#96928A] uppercase relative z-10 bg-[#FAF8F5]">
-        <span>CEO FOR 10 MINUTES • EXECUTIVE BOARDROOM SIMULATION</span>
+      {/* Footer */}
+      <footer className="w-full border-t border-[#111111]/10 py-5 text-center text-xs tracking-[0.25em] text-[#7A766F] uppercase relative z-10 bg-[#FFFFFF]">
+        <div className="flex items-center justify-center space-x-3">
+          <span>CEO FOR 10 MINUTES</span>
+          <span>•</span>
+          <span className="text-[#B58A45] font-bold">THINK. DECIDE. LEAD.</span>
+        </div>
       </footer>
     </div>
   );

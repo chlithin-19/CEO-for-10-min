@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { Domain, ProblemStatement } from '../data/domains';
+import { BUDGET_VALUES, BudgetItem } from '../data/budgets';
 import { 
   DEFAULT_WHEEL_CONFIG, 
   calculateTargetRotation, 
@@ -8,21 +8,17 @@ import {
 } from '../utils/wheelMath';
 import { sound } from '../utils/audio';
 
-interface ProblemWheelProps {
-  domain: Domain;
+interface BudgetWheelProps {
   isSpinning: boolean;
   onSpinStart: () => void;
-  onSpinComplete: (selected: ProblemStatement) => void;
-  selectedProblem: ProblemStatement | null;
-  compact?: boolean;
+  onSpinComplete: (selected: BudgetItem) => void;
+  selectedBudget: BudgetItem | null;
 }
 
-export const ProblemWheel: React.FC<ProblemWheelProps> = ({
-  domain,
+export const BudgetWheel: React.FC<BudgetWheelProps> = ({
   isSpinning,
   onSpinComplete,
-  selectedProblem,
-  compact = false,
+  selectedBudget,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const currentRotationRef = useRef<number>(0);
@@ -30,19 +26,17 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
   const lastActiveSegmentRef = useRef<number>(-1);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
 
-  // Synchronize highlighted index when selectedProblem changes
   useEffect(() => {
-    if (selectedProblem) {
-      const idx = domain.problems.findIndex(p => p.id === selectedProblem.id);
+    if (selectedBudget) {
+      const idx = BUDGET_VALUES.findIndex(b => b.id === selectedBudget.id);
       if (idx !== -1) {
         setHighlightedIndex(idx);
       }
     } else {
       setHighlightedIndex(null);
     }
-  }, [selectedProblem, domain]);
+  }, [selectedBudget]);
 
-  // Render the bold executive wheel onto the canvas
   const drawWheel = useCallback((rotationDeg: number, activeHighlight: number | null) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -66,24 +60,24 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
     const centerX = width / 2;
     const centerY = height / 2;
     const outerRadius = Math.min(centerX, centerY) - 28;
-    const innerHubRadius = outerRadius * 0.27;
+    const innerHubRadius = outerRadius * 0.28;
 
-    const segmentCount = domain.problems.length;
+    const segmentCount = BUDGET_VALUES.length; // 8 segments (45 deg each)
     const segmentAngle = (2 * Math.PI) / segmentCount;
     const rotationRad = (rotationDeg * Math.PI) / 180;
 
-    // Ambient Outer Shadow (Bold executive presence)
+    // Ambient Outer Shadow
     ctx.save();
-    ctx.shadowColor = 'rgba(17, 17, 17, 0.22)';
-    ctx.shadowBlur = 45;
-    ctx.shadowOffsetY = 16;
+    ctx.shadowColor = 'rgba(17, 17, 17, 0.2)';
+    ctx.shadowBlur = 40;
+    ctx.shadowOffsetY = 15;
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius + 8, 0, 2 * Math.PI);
     ctx.fillStyle = '#FFFFFF';
     ctx.fill();
     ctx.restore();
 
-    // Heavy Outer Gold Bezel (Thick executive border)
+    // Heavy Outer Gold Bezel
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius + 6, 0, 2 * Math.PI);
     ctx.strokeStyle = '#B58A45';
@@ -96,10 +90,10 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
     ctx.lineWidth = 4;
     ctx.stroke();
 
-    // Outer Dial Graduation Ticks (Executive instrument feel)
+    // Outer Dial Graduation Ticks (every 5 degrees, 8 major sector divisions)
     for (let deg = 0; deg < 360; deg += 5) {
-      const isMajor = deg % 30 === 0;
-      const isSegmentDiv = deg % 60 === 0;
+      const isSegmentDiv = deg % 45 === 0;
+      const isMajor = deg % 15 === 0;
       const tickAngle = (deg * Math.PI) / 180;
       const tickInner = outerRadius + (isSegmentDiv ? -3 : isMajor ? 0 : 2);
       const tickOuter = outerRadius + (isSegmentDiv ? 7 : isMajor ? 5 : 3.5);
@@ -121,10 +115,10 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
       ctx.stroke();
     }
 
-    // Monochromatic Ivory/White Palette for Segments
-    const segmentColors = ['#FFFFFF', '#F5F1E8', '#EDE5D6'];
+    // Alternating Monochromatic Segments
+    const segmentColors = ['#FFFFFF', '#F6F2EA', '#EEE7DB', '#F6F2EA'];
 
-    // Draw 6 Segments
+    // Draw 8 Segments
     for (let i = 0; i < segmentCount; i++) {
       const startAngle = rotationRad + i * segmentAngle;
       const endAngle = startAngle + segmentAngle;
@@ -137,18 +131,18 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
       ctx.closePath();
 
       if (isSelected) {
-        // Prominent warm gold highlight
+        // High stakes gold highlight
         const goldGrad = ctx.createRadialGradient(centerX, centerY, innerHubRadius, centerX, centerY, outerRadius);
         goldGrad.addColorStop(0, '#FFFFFF');
-        goldGrad.addColorStop(0.5, '#F9F3E5');
-        goldGrad.addColorStop(1, '#EDDEBD');
+        goldGrad.addColorStop(0.5, '#FBF6E9');
+        goldGrad.addColorStop(1, '#E8D4A8');
         ctx.fillStyle = goldGrad;
       } else {
         ctx.fillStyle = segmentColors[i % segmentColors.length];
       }
       ctx.fill();
 
-      // Divider line between segments (Thick gold)
+      // Divider line (thick champagne gold)
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
       ctx.lineTo(centerX + Math.cos(startAngle) * outerRadius, centerY + Math.sin(startAngle) * outerRadius);
@@ -164,17 +158,17 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
       ctx.fillStyle = isSelected ? '#8F6B32' : '#B58A45';
       ctx.fill();
 
-      // Render Wheel Labels (Bold, 15-18px desktop)
+      // Render Currency Label (Large, bold, high contrast)
       const midAngle = startAngle + segmentAngle / 2;
-      const problem = domain.problems[i];
-      const text = problem.wheelLabel;
+      const budget = BUDGET_VALUES[i];
+      const text = budget.label;
 
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate(midAngle);
 
-      // Radial positioning
-      const textRadius = outerRadius * 0.63;
+      // Radial position
+      const textRadius = outerRadius * 0.65;
       ctx.translate(textRadius, 0);
 
       // Tangential rotation
@@ -183,33 +177,18 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       
-      const fontSize = compact ? 12 : 16;
-      ctx.font = `800 ${fontSize}px "Inter", sans-serif`;
+      ctx.font = `800 16px "Inter", sans-serif`;
       ctx.fillStyle = '#111111';
 
-      // Clean text stroke for extreme clarity
       ctx.shadowColor = 'rgba(255, 255, 255, 0.9)';
       ctx.shadowBlur = 3;
 
-      // Wrap multi-word labels across 2 lines so they remain huge & readable
-      const words = text.split(' ');
-      if (words.length > 2 && text.length > 13) {
-        const mid = Math.ceil(words.length / 2);
-        const line1 = words.slice(0, mid).join(' ');
-        const line2 = words.slice(mid).join(' ');
-        ctx.fillText(line1, 0, -9);
-        ctx.fillText(line2, 0, 9);
-      } else if (words.length === 2 && text.length > 11) {
-        ctx.fillText(words[0], 0, -9);
-        ctx.fillText(words[1], 0, 9);
-      } else {
-        ctx.fillText(text, 0, 0);
-      }
+      ctx.fillText(text, 0, 0);
 
       ctx.restore();
     }
 
-    // Heavy Central Executive Hub
+    // Central Executive Hub
     ctx.save();
     ctx.shadowColor = 'rgba(17, 17, 17, 0.25)';
     ctx.shadowBlur = 18;
@@ -219,7 +198,7 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
     ctx.fill();
     ctx.restore();
 
-    // Hub Bezel (Dual ring: Gold and Dark titanium)
+    // Hub Bezel
     ctx.beginPath();
     ctx.arc(centerX, centerY, innerHubRadius, 0, 2 * Math.PI);
     ctx.strokeStyle = '#B58A45';
@@ -232,26 +211,24 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Central Monogram
+    // Central Monogram: ₹ CAPITAL
     ctx.save();
     ctx.translate(centerX, centerY);
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    const hubFontSize = compact ? 12 : 16;
-    ctx.font = `800 ${hubFontSize}px "Cinzel", "Playfair Display", serif`;
+    ctx.font = `800 20px "Inter", "Playfair Display", serif`;
     ctx.fillStyle = '#B58A45';
-    ctx.fillText('CEO', 0, -4);
+    ctx.fillText('₹', 0, -5);
 
-    const subHubFontSize = compact ? 8 : 9.5;
-    ctx.font = `700 ${subHubFontSize}px "Inter", sans-serif`;
+    ctx.font = `700 9px "Inter", sans-serif`;
     ctx.fillStyle = '#FFFFFF';
-    ctx.letterSpacing = '1px';
-    ctx.fillText('CHALLENGE', 0, 10);
+    ctx.letterSpacing = '1.5px';
+    ctx.fillText('CAPITAL', 0, 11);
 
     ctx.restore();
 
-    // Top Pointer (12 o'clock machined metallic gold needle)
+    // Top Pointer (12 o'clock needle pointing down)
     const pointerTopY = centerY - outerRadius - 16;
     const pointerTipY = centerY - outerRadius + 10;
 
@@ -277,7 +254,6 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Top needle cap
     ctx.beginPath();
     ctx.arc(centerX, pointerTopY + 3, 3.5, 0, 2 * Math.PI);
     ctx.fillStyle = '#111111';
@@ -291,29 +267,29 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
     ctx.restore();
 
     ctx.restore();
-  }, [domain, compact]);
+  }, []);
 
-  // Perform rotation animation when isSpinning triggers
+  // Animate Budget Wheel
   useEffect(() => {
     if (!isSpinning) return;
 
     setHighlightedIndex(null);
 
-    // Randomly select one problem from domain
-    const targetIdx = Math.floor(Math.random() * domain.problems.length);
-    const targetProblem = domain.problems[targetIdx];
+    // Randomly select one budget item
+    const targetIdx = Math.floor(Math.random() * BUDGET_VALUES.length);
+    const targetBudget = BUDGET_VALUES[targetIdx];
 
     const startRotation = currentRotationRef.current;
     const finalRotation = calculateTargetRotation(
       startRotation,
       targetIdx,
-      domain.problems.length,
+      BUDGET_VALUES.length, // 8 segments
       DEFAULT_WHEEL_CONFIG.minSpins,
       DEFAULT_WHEEL_CONFIG.maxSpins
     );
 
     const totalDistance = finalRotation - startRotation;
-    const duration = DEFAULT_WHEEL_CONFIG.durationMs;
+    const duration = 4600; // 4.6 seconds for suspenseful budget allocation
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
@@ -324,7 +300,7 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
       const currentAngle = startRotation + totalDistance * easedProgress;
       currentRotationRef.current = currentAngle;
 
-      const currentSegment = getActiveSegmentIndex(currentAngle, domain.problems.length);
+      const currentSegment = getActiveSegmentIndex(currentAngle, BUDGET_VALUES.length);
       if (currentSegment !== lastActiveSegmentRef.current) {
         lastActiveSegmentRef.current = currentSegment;
         const velocityRatio = 1 - easedProgress;
@@ -340,7 +316,7 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
         setHighlightedIndex(targetIdx);
         drawWheel(finalRotation, targetIdx);
         sound.playDecisionLocked();
-        onSpinComplete(targetProblem);
+        onSpinComplete(targetBudget);
       }
     };
 
@@ -351,9 +327,9 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isSpinning, domain, drawWheel, onSpinComplete]);
+  }, [isSpinning, drawWheel, onSpinComplete]);
 
-  // Initial draw & redraw on domain change or window resize
+  // Initial draw & redraw
   useEffect(() => {
     drawWheel(currentRotationRef.current, highlightedIndex);
 
@@ -363,16 +339,11 @@ export const ProblemWheel: React.FC<ProblemWheelProps> = ({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [drawWheel, domain, highlightedIndex]);
+  }, [drawWheel, highlightedIndex]);
 
   return (
     <div className="relative flex flex-col items-center justify-center select-none">
-      {/* Large Executive Wheel Container: 560-650px desktop */}
-      <div className={`relative flex items-center justify-center transition-all duration-500 ${
-        compact 
-          ? 'w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] md:w-[420px] md:h-[420px]' 
-          : 'w-[320px] h-[320px] sm:w-[480px] sm:h-[480px] md:w-[580px] md:h-[580px] lg:w-[630px] lg:h-[630px]'
-      }`}>
+      <div className="relative w-[320px] h-[320px] sm:w-[460px] sm:h-[460px] md:w-[540px] md:h-[540px] lg:w-[580px] lg:h-[580px] flex items-center justify-center">
         <canvas
           ref={canvasRef}
           className="w-full h-full block"

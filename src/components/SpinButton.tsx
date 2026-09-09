@@ -5,12 +5,16 @@ interface SpinButtonProps {
   isSpinning: boolean;
   onClick: () => void;
   disabled?: boolean;
+  label?: string;
+  spinningLabel?: string;
 }
 
 export const SpinButton: React.FC<SpinButtonProps> = ({
   isSpinning,
   onClick,
   disabled = false,
+  label = "SPIN THE WHEEL",
+  spinningLabel = "SPINNING...",
 }) => {
   const handleClick = () => {
     if (disabled || isSpinning) return;
@@ -25,28 +29,28 @@ export const SpinButton: React.FC<SpinButtonProps> = ({
         onClick={handleClick}
         disabled={disabled || isSpinning}
         aria-busy={isSpinning}
-        className={`relative group h-14 sm:h-16 px-12 sm:px-16 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89555]/50 flex items-center justify-center ${
+        className={`relative group h-[58px] sm:h-[62px] px-12 sm:px-16 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#B58A45]/60 flex items-center justify-center ${
           isSpinning
-            ? 'bg-[#FAF8F5] border-2 border-[#B89555]/40 text-[#66635D] cursor-wait'
+            ? 'bg-[#222222] border-2 border-[#B58A45]/50 text-[#B58A45] cursor-wait'
             : disabled
-            ? 'bg-[#FFFFFF] border-2 border-[rgba(40,35,25,0.15)] text-[#96928A] cursor-not-allowed opacity-60'
-            : 'bg-[#FFFFFF] border-2 border-[#B89555] hover:bg-[#FAF6EE] text-[#171717] hover:text-black hover:-translate-y-0.5 hover:shadow-button-hover active:translate-y-0.5 shadow-sm'
+            ? 'bg-[#111111]/40 border-2 border-[#111111]/20 text-[#7A766F] cursor-not-allowed'
+            : 'bg-[#111111] border-2 border-[#B58A45] hover:bg-[#1A1A1A] hover:border-[#D4B376] text-white hover:-translate-y-0.5 shadow-button-command active:translate-y-0.5'
         }`}
       >
         <div className="flex items-center justify-center space-x-3">
           {isSpinning && (
-            <span className="w-2.5 h-2.5 rounded-full bg-[#B89555] animate-ping" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#B58A45] animate-ping" />
           )}
-          <span className="font-cinzel text-lg sm:text-xl font-semibold tracking-[0.2em] uppercase">
-            {isSpinning ? "DECISION IN PROGRESS…" : "SPIN THE WHEEL"}
+          <span className="font-cinzel text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white">
+            {isSpinning ? spinningLabel : label}
           </span>
         </div>
       </button>
 
-      {/* Supporting spinning indicator status text */}
+      {/* Subtext when spinning */}
       {isSpinning && (
-        <span className="text-sm sm:text-base tracking-[0.18em] text-[#8F713D] font-medium mt-3 uppercase animate-pulse">
-          Deliberating executive challenge…
+        <span className="text-xs sm:text-sm tracking-[0.2em] text-[#8F6B32] font-bold mt-3 uppercase animate-pulse">
+          Deliberating Executive Outcome…
         </span>
       )}
     </div>

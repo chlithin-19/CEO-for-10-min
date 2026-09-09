@@ -22,26 +22,30 @@ export const DomainSelector: React.FC<DomainSelectorProps> = ({
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 sm:py-10">
-      <div className="text-center mb-8 sm:mb-10">
-        <h1 className="font-cinzel text-2xl sm:text-[26px] md:text-[28px] font-semibold tracking-[0.2em] text-[#171717] uppercase">
-          SELECT YOUR DOMAIN
+    <div className="w-full max-w-6xl mx-auto px-4 py-8 sm:py-12">
+      <div className="text-center mb-10 sm:mb-12">
+        <div className="inline-block px-3 py-1 mb-3 rounded bg-[#111111] text-[#B58A45] font-cinzel text-xs font-bold tracking-[0.25em] uppercase shadow-sm">
+          EXECUTIVE ARENA
+        </div>
+        <h1 className="font-cinzel text-3xl sm:text-4xl md:text-[42px] font-bold tracking-[0.16em] text-[#111111] uppercase leading-tight">
+          SELECT YOUR ARENA
         </h1>
-        <p className="text-xs sm:text-sm tracking-widest text-[#66635D] mt-2 font-normal">
-          Choose the arena in which you will make your CEO decision.
+        <p className="text-sm sm:text-base tracking-[0.12em] text-[#4A4843] mt-3 font-normal max-w-xl mx-auto">
+          Choose the business world where you will make your CEO decision.
         </p>
-        <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#B89555]/60 to-transparent mx-auto mt-4" />
+        <div className="w-20 h-[2px] bg-[#B58A45] mx-auto mt-5" />
       </div>
 
       <div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
         role="radiogroup"
-        aria-label="CEO Domains"
+        aria-label="CEO Arenas"
       >
-        {domains.map((domain) => (
+        {domains.map((domain, index) => (
           <DomainCard
             key={domain.id}
             domain={domain}
+            index={index}
             isSelected={selectedDomain?.id === domain.id}
             onSelect={handleSelect}
             disabled={disabled}
