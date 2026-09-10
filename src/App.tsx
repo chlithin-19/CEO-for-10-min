@@ -11,6 +11,7 @@ import { ProblemCard } from './components/ProblemCard';
 import { BudgetResultCard } from './components/BudgetResultCard';
 import { FinalChallengeCard } from './components/FinalChallengeCard';
 import { ResetControls } from './components/ResetControls';
+import { Round2Page } from './components/round2/Round2Page';
 
 type Stage = 
   | 'SELECT_DOMAIN'
@@ -23,6 +24,7 @@ type Stage =
   | 'FINAL_CHALLENGE';
 
 export const App: React.FC = () => {
+  const [activeRound, setActiveRound] = useState<'round1' | 'round2'>('round1');
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
   const [selectedProblem, setSelectedProblem] = useState<ProblemStatement | null>(null);
   const [selectedBudget, setSelectedBudget] = useState<BudgetItem | null>(null);
@@ -93,18 +95,30 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSelectRound = (round: 'round1' | 'round2') => {
+    setActiveRound(round);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F3EE] text-[#111111] flex flex-col relative selection:bg-[#B58A45]/25 selection:text-[#111111]">
-      {/* Header */}
-      <EventHeader roundTitle="ROUND 1" />
+      {/* Header with Round 1 and Round 2 Navigation */}
+      <EventHeader 
+        activeRound={activeRound} 
+        onSelectRound={handleSelectRound}
+        roundTitle={activeRound === 'round1' ? 'ROUND 1' : 'ROUND 2'} 
+      />
 
-      {/* Progress Indicator */}
-      <div className="pt-4 sm:pt-6">
-        <ProgressIndicator currentStep={getProgressStep()} />
-      </div>
+      {/* ROUND 1 VIEW */}
+      {activeRound === 'round1' && (
+        <>
+          {/* Progress Indicator */}
+          <div className="pt-4 sm:pt-6">
+            <ProgressIndicator currentStep={getProgressStep()} />
+          </div>
 
-      {/* Main Interactive Stage */}
-      <main className="flex-1 flex flex-col justify-center items-center relative z-10 px-4 py-4 sm:py-8 md:py-10 max-w-7xl mx-auto w-full">
+          {/* Main Interactive Stage */}
+          <main className="flex-1 flex flex-col justify-center items-center relative z-10 px-4 py-4 sm:py-8 md:py-10 max-w-7xl mx-auto w-full">
         
         {/* ========================================================================= */}
         {/* STAGE 1: DOMAIN SELECTION                                                 */}
@@ -265,6 +279,13 @@ export const App: React.FC = () => {
         )}
 
       </main>
+        </>
+      )}
+
+      {/* ROUND 2 VIEW */}
+      {activeRound === 'round2' && (
+        <Round2Page />
+      )}
 
       {/* Footer */}
       <footer className="w-full border-t border-[#111111]/10 py-5 text-center text-xs tracking-[0.25em] text-[#7A766F] uppercase relative z-10 bg-[#FFFFFF]">
