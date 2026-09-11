@@ -16,10 +16,45 @@ type Round2Stage =
   | 'CASE_REVEALED'
   | 'STRATEGY_PRESENTATION';
 
-export const Round2Page: React.FC = () => {
-  const [ceo1, setCeo1] = useState<string>('');
-  const [ceo2, setCeo2] = useState<string>('');
-  const [teamId, setTeamId] = useState<string>('');
+interface Round2PageProps {
+  teamId?: string;
+  ceo1?: string;
+  ceo2?: string;
+  onChangeTeamId?: (val: string) => void;
+  onChangeCeo1?: (val: string) => void;
+  onChangeCeo2?: (val: string) => void;
+}
+
+export const Round2Page: React.FC<Round2PageProps> = ({
+  teamId: propTeamId,
+  ceo1: propCeo1,
+  ceo2: propCeo2,
+  onChangeTeamId,
+  onChangeCeo1,
+  onChangeCeo2,
+}) => {
+  const [internalCeo1, setInternalCeo1] = useState<string>('');
+  const [internalCeo2, setInternalCeo2] = useState<string>('');
+  const [internalTeamId, setInternalTeamId] = useState<string>('');
+
+  const ceo1 = propCeo1 !== undefined ? propCeo1 : internalCeo1;
+  const ceo2 = propCeo2 !== undefined ? propCeo2 : internalCeo2;
+  const teamId = propTeamId !== undefined ? propTeamId : internalTeamId;
+
+  const handleSetCeo1 = (val: string) => {
+    if (onChangeCeo1) onChangeCeo1(val);
+    else setInternalCeo1(val);
+  };
+
+  const handleSetCeo2 = (val: string) => {
+    if (onChangeCeo2) onChangeCeo2(val);
+    else setInternalCeo2(val);
+  };
+
+  const handleSetTeamId = (val: string) => {
+    if (onChangeTeamId) onChangeTeamId(val);
+    else setInternalTeamId(val);
+  };
 
   const [selectedDomain, setSelectedDomain] = useState<Round2Domain | null>(null);
   const [selectedCase, setSelectedCase] = useState<Round2Case | null>(null);
@@ -72,9 +107,9 @@ export const Round2Page: React.FC = () => {
 
   // 4. Host Action: Next Team (Resets everything)
   const handleNextTeam = () => {
-    setCeo1('');
-    setCeo2('');
-    setTeamId('');
+    handleSetCeo1('');
+    handleSetCeo2('');
+    handleSetTeamId('');
     setSelectedDomain(null);
     setSelectedCase(null);
     setStage('SELECT_DOMAIN');
@@ -125,9 +160,9 @@ export const Round2Page: React.FC = () => {
             ceo1={ceo1}
             ceo2={ceo2}
             teamId={teamId}
-            onChangeCeo1={setCeo1}
-            onChangeCeo2={setCeo2}
-            onChangeTeamId={setTeamId}
+            onChangeCeo1={handleSetCeo1}
+            onChangeCeo2={handleSetCeo2}
+            onChangeTeamId={handleSetTeamId}
             onContinue={handleContinueToChallenge}
           />
         )}

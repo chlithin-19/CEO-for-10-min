@@ -25,6 +25,9 @@ type Stage =
 
 export const App: React.FC = () => {
   const [activeRound, setActiveRound] = useState<'round1' | 'round2'>('round1');
+  const [teamId, setTeamId] = useState<string>('T01');
+  const [member1, setMember1] = useState<string>('');
+  const [member2, setMember2] = useState<string>('');
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
   const [selectedProblem, setSelectedProblem] = useState<ProblemStatement | null>(null);
   const [selectedBudget, setSelectedBudget] = useState<BudgetItem | null>(null);
@@ -120,6 +123,14 @@ export const App: React.FC = () => {
           {/* Main Interactive Stage */}
           <main className="flex-1 flex flex-col justify-center items-center relative z-10 px-4 py-4 sm:py-8 md:py-10 max-w-7xl mx-auto w-full">
         
+        {/* Persistent Two-Member Team Overview Strip throughout Round 1 */}
+        {stage !== 'SELECT_DOMAIN' && (
+          <div className="mb-4 sm:mb-6 px-4 py-2 rounded-full bg-white border border-[#B58A45]/40 shadow-sm flex items-center space-x-2.5 text-xs font-cinzel">
+            <span className="font-bold text-[#8F6B32] uppercase tracking-wider">TEAM {teamId || 'T01'}:</span>
+            <span className="font-bold text-[#111111]">{member1 || 'Member 1'} & {member2 || 'Member 2'}</span>
+          </div>
+        )}
+
         {/* ========================================================================= */}
         {/* STAGE 1: DOMAIN SELECTION                                                 */}
         {/* ========================================================================= */}
@@ -129,6 +140,12 @@ export const App: React.FC = () => {
               domains={DOMAINS}
               selectedDomain={selectedDomain}
               onSelectDomain={handleDomainSelect}
+              teamId={teamId}
+              member1={member1}
+              member2={member2}
+              onChangeTeamId={setTeamId}
+              onChangeMember1={setMember1}
+              onChangeMember2={setMember2}
             />
           </div>
         )}
@@ -284,7 +301,14 @@ export const App: React.FC = () => {
 
       {/* ROUND 2 VIEW */}
       {activeRound === 'round2' && (
-        <Round2Page />
+        <Round2Page 
+          teamId={teamId}
+          ceo1={member1}
+          ceo2={member2}
+          onChangeTeamId={setTeamId}
+          onChangeCeo1={setMember1}
+          onChangeCeo2={setMember2}
+        />
       )}
 
       {/* Footer */}

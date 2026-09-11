@@ -246,17 +246,17 @@ export const Round2CaseReveal: React.FC<Round2CaseRevealProps> = ({
             <span className="px-3 py-1 rounded bg-[#111111] text-[#FFFFFF] text-xs font-bold font-cinzel uppercase tracking-wider">
               {round2Case.company}
             </span>
-            <span className="px-3 py-1 rounded bg-[#F5F3EE] border border-[#B58A45]/30 text-[#4A4843] text-xs font-semibold">
-              {round2Case.market}
+            <span className="px-3 py-1 rounded bg-[#F5F3EE] border border-[#B58A45]/30 text-[#8F6B32] text-xs font-bold font-cinzel uppercase tracking-wider">
+              {domain.name}
             </span>
           </div>
         </div>
 
-        {/* Company Vitals Grid (5 core company metrics) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 p-4 rounded-md bg-[#FAF9F5] border border-[#B58A45]/20 mb-8">
+        {/* Company Vitals Grid (Core Quantitative Baseline) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-md bg-[#FAF9F5] border border-[#B58A45]/20 mb-8">
           
           {/* Company */}
-          <div className="flex flex-col">
+          <div className="flex flex-col border-r border-[#111111]/10 pr-2">
             <span className="text-[10px] font-cinzel font-bold text-[#7A766F] uppercase tracking-wider flex items-center gap-1">
               <Building2 className="w-3 h-3 text-[#B58A45]" /> COMPANY
             </span>
@@ -265,18 +265,8 @@ export const Round2CaseReveal: React.FC<Round2CaseRevealProps> = ({
             </span>
           </div>
 
-          {/* Market */}
-          <div className="flex flex-col">
-            <span className="text-[10px] font-cinzel font-bold text-[#7A766F] uppercase tracking-wider flex items-center gap-1">
-              <Compass className="w-3 h-3 text-[#B58A45]" /> MARKET
-            </span>
-            <span className="text-xs sm:text-sm font-bold text-[#111111] mt-0.5 truncate" title={round2Case.market}>
-              {round2Case.market}
-            </span>
-          </div>
-
-          {/* Size */}
-          <div className="flex flex-col">
+          {/* Workforce / Size */}
+          <div className="flex flex-col border-r sm:border-r border-[#111111]/10 pr-2">
             <span className="text-[10px] font-cinzel font-bold text-[#7A766F] uppercase tracking-wider flex items-center gap-1">
               <Users className="w-3 h-3 text-[#B58A45]" /> SIZE
             </span>
@@ -286,7 +276,7 @@ export const Round2CaseReveal: React.FC<Round2CaseRevealProps> = ({
           </div>
 
           {/* Revenue */}
-          <div className="flex flex-col">
+          <div className="flex flex-col border-r border-[#111111]/10 pr-2">
             <span className="text-[10px] font-cinzel font-bold text-[#7A766F] uppercase tracking-wider flex items-center gap-1">
               <DollarSign className="w-3 h-3 text-[#B58A45]" /> REVENUE
             </span>
@@ -295,14 +285,43 @@ export const Round2CaseReveal: React.FC<Round2CaseRevealProps> = ({
             </span>
           </div>
 
-          {/* Position */}
-          <div className="flex flex-col sm:col-span-2 md:col-span-1">
+          {/* Sector */}
+          <div className="flex flex-col">
             <span className="text-[10px] font-cinzel font-bold text-[#7A766F] uppercase tracking-wider flex items-center gap-1">
-              <TrendingUp className="w-3 h-3 text-[#B58A45]" /> POSITION
+              <Compass className="w-3 h-3 text-[#B58A45]" /> SECTOR
             </span>
-            <span className="text-xs sm:text-sm font-bold text-[#111111] mt-0.5 line-clamp-2" title={round2Case.position}>
+            <span className="text-xs sm:text-sm font-bold text-[#111111] mt-0.5">
+              {domain.name}
+            </span>
+          </div>
+
+        </div>
+
+        {/* ========================================================================= */}
+        {/* EXPANDED MARKET & COMPETITIVE POSITION BRIEFS                             */}
+        {/* ========================================================================= */}
+        <div className="space-y-6 mb-8">
+          
+          {/* MARKET CONTEXT */}
+          <div className="p-5 sm:p-6 rounded-md bg-[#FAF9F5] border-l-4 border-[#B58A45] border-t border-r border-b border-[#B58A45]/25">
+            <div className="flex items-center space-x-2 text-xs font-cinzel font-bold tracking-[0.2em] text-[#8F6B32] uppercase mb-2.5">
+              <Compass className="w-4 h-4 text-[#B58A45]" />
+              <span>MARKET ENVIRONMENT & SEGMENT</span>
+            </div>
+            <p className="text-[#2C2A26] text-sm sm:text-[15px] leading-relaxed font-normal">
+              {round2Case.market}
+            </p>
+          </div>
+
+          {/* COMPETITIVE POSITION */}
+          <div className="p-5 sm:p-6 rounded-md bg-[#FAF9F5] border-l-4 border-[#111111] border-t border-r border-b border-[#111111]/15">
+            <div className="flex items-center space-x-2 text-xs font-cinzel font-bold tracking-[0.2em] text-[#111111] uppercase mb-2.5">
+              <TrendingUp className="w-4 h-4 text-[#B58A45]" />
+              <span>COMPETITIVE POSITION & VULNERABILITY</span>
+            </div>
+            <p className="text-[#2C2A26] text-sm sm:text-[15px] leading-relaxed font-normal">
               {round2Case.position}
-            </span>
+            </p>
           </div>
 
         </div>
@@ -313,7 +332,7 @@ export const Round2CaseReveal: React.FC<Round2CaseRevealProps> = ({
             <Briefcase className="w-4 h-4 text-[#B58A45]" />
             <span>THE SITUATION</span>
           </div>
-          <div className="p-4 sm:p-5 rounded-md bg-[#FFFFFF] border-l-4 border-[#B58A45] border-t border-r border-b border-[#111111]/10 text-[#2C2A26] text-sm sm:text-base leading-relaxed">
+          <div className="p-4 sm:p-5 rounded-md bg-[#FFFFFF] border border-[#111111]/15 text-[#2C2A26] text-sm sm:text-base leading-relaxed">
             {round2Case.situation}
           </div>
         </div>
