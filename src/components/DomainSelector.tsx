@@ -71,7 +71,7 @@ export const DomainSelector: React.FC<DomainSelectorProps> = ({
               type="text"
               value={member1}
               onChange={(e) => onChangeMember1(e.target.value)}
-              placeholder="e.g. Rahul"
+              placeholder="e.g. Your Name"
               className="w-full px-3.5 py-2.5 rounded bg-[#F5F3EE] border border-[#111111]/15 text-[#111111] text-sm focus:outline-none focus:border-[#B58A45] focus:bg-white transition-all placeholder:text-[#7A766F]"
             />
           </div>
@@ -84,7 +84,7 @@ export const DomainSelector: React.FC<DomainSelectorProps> = ({
               type="text"
               value={member2}
               onChange={(e) => onChangeMember2(e.target.value)}
-              placeholder="e.g. Priya"
+              placeholder="e.g. Your Name"
               className="w-full px-3.5 py-2.5 rounded bg-[#F5F3EE] border border-[#111111]/15 text-[#111111] text-sm focus:outline-none focus:border-[#B58A45] focus:bg-white transition-all placeholder:text-[#7A766F]"
             />
           </div>
@@ -105,7 +105,7 @@ export const DomainSelector: React.FC<DomainSelectorProps> = ({
       </div>
 
       {/* 4 Domain Cards */}
-      <div 
+      <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
         role="radiogroup"
         aria-label="CEO Arenas"
